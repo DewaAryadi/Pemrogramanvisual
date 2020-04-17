@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Visual Car Rental</title>
+</head>
+<body style="padding-left: 5%; padding-right: 5%; font-family:Helvetica; background-color: whitesmoke; color: black;">
+    <h2 style="text-align: center; background-color: teal;">FORM PENYEWAAN MOBIL</h2>
+    <div id="book"></div>
+    <ol>
+        <h3> Info Booking !! : </h3>
+            <li>Booking mobil dilakukan H-3 sebelum mobil di ambil ke Lokasi</li>
+            <li>Request yang dipilih dikenakan biaya tambahan</li>
+            <li>Pembayaran dilakukan di Lokasi saat pengambilan mobil</li>
+            <li>kerusakan mobil setelah dikembalikan adalah tanggung jawab penyewa</li>
+    </ol>
+
+    <form id="form">
+        <fieldset style="background-color:teal;  border: 0px;" >
+        <label for="nama">Nama Lengkap : </label><br />
+        <input type="text" name="nama" required />
+        <br /><br />
+        <label for="nomor">No.Telpon : </label><br />
+        <input type="number" name="nomor" required />
+        <br /><br />
+        <label for="Mobil">Tipe Mobil:</label>
+        <select name="Mobil">
+          <option value="Avanza">Avanza</option>
+          <option value="Innova">Innova</option>
+          <option value="Vellfire">Vellfire</option>
+          <option value="Alphard">Alphard</option>
+        </select>
+        <br /><br />
+        <label for="Tglsewa">Tanggal Sewa : </label><br />
+        <input type="date" name="Tglsewa" placeholder="YYYY-MM-DD" required />
+        <br /><br />
+        <label for="Tglkembali">Tanggal Pengembalian : </label><br />
+        <input type="date" name="Tglkembali" placeholder="YYYY-MM-DD" required />
+        <br /><br />
+        <label for="Request">Request (Cuci Mobil) : </label><br/>
+        <select name="Request">
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+        </select>
+        <br /><br />
+        <input style="background-color: whitesmoke; border: 0cm;" type="submit" value="Booking"/>
+    </fieldset>
+    </form>
+
+ 
+    <script>
+        const electron = require("electron");
+        const{
+            ipcRenderer
+        } = electron;
+            
+        const form = document.getElementById("form");
+        const elements = {};
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            for (let i = 0; i < form.elements.length; i++){
+                if (form.elements[i].type !== "submit")
+                    elements[form.elements[i].name]= form.elements[i].value;
+            } 
+
+            ipcRenderer.send("booking:create", elements);
+        });
+            ipcRenderer.send("booking:request:menu");
+ 
+            ipcRenderer.on("booking:request:menu", (event, bookings) => {
+            const bookDiv = document.getElementById("book");
+            bookings.forEach(book => {
+            const bookingDiv = document.createElement("div");
+
+            const namaParagraph = document.createElement("p");
+            namaParagraph.innerHTML = `Name: ${booking.nama}`;
+
+            const nomorParagraph = document.createElement("p")
+            nomorParagraph.innerHTML = `No.Telpon: ${booking.nomor}`;
+
+            const MobilParagraph = document.createElement("p")
+            MobilParagraph.innerHTML = `Mobil: ${booking.Mobil}`;
+
+            const TglsewaParagraph = document.createElement("p")
+            TglsewaParagraph.innerHTML = `Tanggal Sewa: ${booking.Tglsewa}`;
+            
+            const TglkembaliParagraph = document.createElement("p")
+            TglkembaliParagraph.innerHTML = `Tanggal Pengembalian: ${booking.Tglkembali}`;
+
+            const RequestParagraph = document.createElement("p")
+            RequestParagraph.innerHTML = `Request: ${booking.Request}`;
+
+            const doneParagraph = document.createElement("p")
+            doneParagraph.innerHTML = `Done: ${booking.done ? "Yes" : "No"}`;
+            
+            const doneButton = document.createElement("button");
+            doneButton.innerHTML = "Done";
+            doneButton.disabled = booking.done ? true : false;
+            doneButton.onclick = () => done(booking.id);
+
+            const hr = document.createElement("hr");
+
+            bookingDiv.appendChild(namaParagraph);
+            bookingDiv.appendChild(nomorParagraph);
+            bookingDiv.appendChild(MobilParagraph);
+            bookingDiv.appendChild(TglsewaParagraph);
+            bookingDiv.appendChild(TglkembaliParagraph);
+            bookingDiv.appendChild(RequestParagraph);
+            bookingDiv.appendChild(doneParagraph);
+            bookingDiv.appendChild(doneButton);
+            bookingDiv.appendChild(hr);
+
+            bookDiv.append(bookingDiv);
+
+            });
+        });
+        const done = id => {
+        ipcRenderer.send("booking:done", id);
+    }
+    </script>
+</body>
+</html>

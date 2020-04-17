@@ -1,0 +1,16 @@
+{
+  "name": "uts-pvisual",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "electron": "^8.2.1",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "electron . "
+  },
+  "author": "",
+  "license": "ISC"
+}
