@@ -1,0 +1,16 @@
+{
+  "name": "pvisual",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": " electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^8.2.1",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {},
+  "description": ""
+}
