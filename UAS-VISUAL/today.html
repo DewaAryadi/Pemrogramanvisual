@@ -1,0 +1,78 @@
+<html>
+
+<head>
+</head>
+
+<body style="margin-top:10px;font-family: Arial; background-color: whitesmoke; ; font-weight: bold;">
+    <h1 style="text-align: center; margin-top: 10px; font-family:sans-serif ;">TODAY'S RENTAL INFO</h1>
+    <hr>
+    <div style="background-color: whitesmoke" id="history"></div>
+
+
+<script>
+        const electron = require("electron");
+        const {
+            ipcRenderer
+        } = electron;
+
+        ipcRenderer.send("rent:request:today");
+
+        ipcRenderer.on("rent:response:today", (event, rents) => {
+        const historyDiv = document.getElementById("history");
+        historyDiv.innerHTML ="";
+        
+        rents.forEach(rent => {
+        const rentDiv = document.createElement("div");
+
+        const namaParagraph = document.createElement("p");
+        namaParagraph.innerHTML = `Name: ${rent.nama}`;
+
+        const nomorParagraph = document.createElement("p")
+        nomorParagraph.innerHTML = `No.Telepon: ${rent.nomor}`;
+
+        const MobilParagraph = document.createElement("p")
+        MobilParagraph.innerHTML = `Mobil: ${rent.Mobil}`;
+
+        const TglsewaParagraph = document.createElement("p")
+        TglsewaParagraph.innerHTML = `Tanggal Sewa: ${rent.Tglsewa}`;
+        
+        const TglkembaliParagraph = document.createElement("p")
+        TglkembaliParagraph.innerHTML = `Tanggal Pengembalian: ${rent.Tglkembali}`;
+
+        const RequestParagraph = document.createElement("p")
+        RequestParagraph.innerHTML = `Request: ${rent.Request}`;
+
+        const doneParagraph = document.createElement("p")
+        doneParagraph.innerHTML = `Done: ${rent.done ? "Yes" : "No"}`;
+        
+
+        const doneButton = document.createElement("button");
+        doneButton.innerHTML = "Done";
+        doneButton.disabled = rent.done ? true : false;
+        doneButton.onclick = () => done(rent.id);
+
+
+        const hr = document.createElement("hr");
+
+        rentDiv.appendChild(namaParagraph);
+        rentDiv.appendChild(nomorParagraph);
+        rentDiv.appendChild(MobilParagraph);
+        rentDiv.appendChild(TglsewaParagraph);
+        rentDiv.appendChild(TglkembaliParagraph);
+        rentDiv.appendChild(RequestParagraph);
+        rentDiv.appendChild(doneParagraph);
+        rentDiv.appendChild(doneButton);
+        rentDiv.appendChild(hr);
+
+
+        historyDiv.append(rentDiv);
+
+        });
+    });
+    const done = id => {
+        ipcRenderer.send("rent:done", id);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<html>
+<head>
+    <title>Sanjaya Car Rental</title>
+</head>
+<style>
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+  }
+  
+  .col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+  }
+</style>
+
+<body style="padding-left: 5%; padding-right: 5%; font-family:Helvetica; background-color: whitesmoke; color: black;">
+    <h2 style="text-align: center; background-color:darkgoldenrod;">FORM PENYEWAAN MOBIL</h2>
+    <!-- <div id="history"></div> -->
+    <ol style="font-family: Arial; font-size: medium; font-weight: bold;">
+        <h3> Info Rental Mobil !! : </h3>
+            <li>Booking mobil dilakukan H-3 sebelum mobil di ambil ke Lokasi</li>
+            <li>Request yang dipilih dikenakan biaya tambahan</li>
+            <li>Pembayaran dilakukan di Lokasi saat pengambilan mobil</li>
+            <li>kerusakan mobil setelah dikembalikan adalah tanggung jawab penyewa</li>
+    </ol>
+
+    <form id="form">
+        <fieldset style="background-color:darkgoldenrod;  border: 0px;" >
+        <label class="col-25" for="nama">Nama Lengkap </label>
+        <input class="col-75" type="text" name="nama" required />
+        <br /><br />
+        <label class="col-25" for="nomor">No.Telepon </label>
+        <input class="col-75" type="number" name="nomor" required />
+        <br /><br />
+        <label class="col-25" for="Mobil">Tipe Mobil</label>
+        <select class="col-75" name="Mobil">
+          <option value="Avanza">Avanza</option>
+          <option value="Innova">Innova</option>
+          <option value="Vellfire">Vellfire</option>
+          <option value="Alphard">Alphard</option>
+        </select>
+        <br /><br />
+        <label class="col-25" for="Tglsewa">Tanggal Sewa</label>
+        <input class="col-75" type="date" name="Tglsewa" placeholder="YYYY-MM-DD" required />
+        <br /><br />
+        <label class="col-25" for="Tglkembali">Tanggal Pengembalian</label>
+        <input class="col-75" type="date" name="Tglkembali" placeholder="YYYY-MM-DD" required />
+        <br /><br />
+        <label class="col-25" for="Request">Request (Cuci Mobil) : </label>
+        <select class="col-75" name="Request">
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+        </select>
+        <br /><br />
+        <center><input style="background-color: whitesmoke; border: 0cm;" type="submit" value="RENT NOW!"/></center>
+    </fieldset>
+    </form>
+
+    <script>
+        const electron = require("electron");
+        const{
+            ipcRenderer
+        } =electron;
+            
+        const form = document.getElementById("form");
+        const elements = {};
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            for (let i = 0; i < form.elements.length; i++){
+                if (form.elements[i].type !== "submit")
+                    elements[form.elements[i].name]= form.elements[i].value;
+            } 
+
+            ipcRenderer.send("rent:form", elements);
+        });
+    </script>
+</body>
+
+</html>

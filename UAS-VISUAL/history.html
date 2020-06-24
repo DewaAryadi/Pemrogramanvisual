@@ -1,0 +1,64 @@
+<html>
+
+<head>
+</head>
+
+<body style="font-family: Arial; background-color: whitesmoke;">
+    <h1 style="text-align: center; font-family: sans-serif;">RENT HISTORY</h1>
+    <hr>
+    <div id="history"></div>
+
+
+<script>
+    const electron = require("electron");
+    const {
+        ipcRenderer
+    } = electron;
+
+        ipcRenderer.send("rent:request:history");
+
+        ipcRenderer.on("rent:response:history", (event, rents) => {
+        const historyDiv = document.getElementById("history");
+        historyDiv.innerHTML ="";
+        rents.forEach(rent => {
+        const rentDiv = document.createElement("div");
+
+        const namaParagraph = document.createElement("p");
+        namaParagraph.innerHTML = `Name: ${rent.nama}`;
+
+        const nomorParagraph = document.createElement("p")
+        nomorParagraph.innerHTML = `No.Telpon: ${rent.nomor}`;
+
+        const MobilParagraph = document.createElement("p")
+        MobilParagraph.innerHTML = `Mobil: ${rent.Mobil}`;
+
+        const TglsewaParagraph = document.createElement("p")
+        TglsewaParagraph.innerHTML = `Tanggal Sewa: ${rent.Tglsewa}`;
+        
+        const TglkembaliParagraph = document.createElement("p")
+        TglkembaliParagraph.innerHTML = `Tanggal Pengembalian: ${rent.Tglkembali}`;
+
+        const RequestParagraph = document.createElement("p")
+        RequestParagraph.innerHTML = `Request: ${rent.Request}`;
+
+        const doneParagraph = document.createElement("p")
+        doneParagraph.innerHTML = `Done: ${rent.done ? "Yes" : "No"}`;
+        
+        const hr = document.createElement("hr");
+
+        rentDiv.appendChild(namaParagraph);
+        rentDiv.appendChild(nomorParagraph);
+        rentDiv.appendChild(MobilParagraph);
+        rentDiv.appendChild(TglsewaParagraph);
+        rentDiv.appendChild(TglkembaliParagraph);
+        rentDiv.appendChild(RequestParagraph);
+        rentDiv.appendChild(doneParagraph);
+        rentDiv.appendChild(hr);
+
+        historyDiv.append(rentDiv);
+
+        });
+    });
+</script>
+</body>
+</html>
